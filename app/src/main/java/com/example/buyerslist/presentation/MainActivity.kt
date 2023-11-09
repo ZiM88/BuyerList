@@ -1,8 +1,8 @@
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +11,7 @@ import com.example.buyerslist.presentation.MainViewModel
 import com.example.buyerslist.presentation.ShopListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
@@ -32,24 +32,26 @@ class MainActivity : AppCompatActivity() {
                 val intent = ShopItemActivity.newIntentAddItem(this)
                 startActivity(intent)
             } else {
-                launchFragment(ShopItemFragment.newInstanceAddItem(), "add")
+                launchFragment(ShopItemFragment.newInstanceAddItem())
             }
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 
     private fun isOnePaneMode(): Boolean {
         return shopItemContainer == null
     }
 
-    private fun launchFragment(fragment: Fragment, name: String) {
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.shop_item_container, fragment)
-            .addToBackStack(name)
+            .addToBackStack(null)
             .commit()
-    }
-
-    override fun onBackPressed() {
-        supportFragmentManager.popBackStack("add", FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     private fun setupRecyclerView() {
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = ShopItemActivity.newIntentEditItem(this, it.id)
                 startActivity(intent)
             } else {
-                launchFragment(ShopItemFragment.newInstanceEditItem(it.id), "edit")
+                launchFragment(ShopItemFragment.newInstanceEditItem(it.id))
             }
         }
     }

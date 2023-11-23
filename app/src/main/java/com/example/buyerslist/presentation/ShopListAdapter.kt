@@ -10,7 +10,6 @@ import com.example.bayerslist.databinding.ItemShopDisabledBinding
 import com.example.bayerslist.databinding.ItemShopEnabledBinding
 import com.example.buyerslist.domain.ShopItem
 
-
 class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
@@ -43,12 +42,10 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCa
         }
         when (binding) {
             is ItemShopDisabledBinding -> {
-                binding.tvName.text = shopItem.name
-                binding.tvCount.text = shopItem.count.toString()
+                binding.shopItem = shopItem
             }
             is ItemShopEnabledBinding -> {
-                binding.tvName.text = shopItem.name
-                binding.tvCount.text = shopItem.count.toString()
+                binding.shopItem = shopItem
             }
         }
     }
